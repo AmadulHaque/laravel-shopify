@@ -12,6 +12,7 @@
         "php": "^8.3",
         "amadulhaque/laravel-shopify": "@dev",
         "laravel/framework": "^13.8",
+        "laravel/telescope": "^5.20",
         "laravel/tinker": "^3.0"
     },
     "repositories": [
