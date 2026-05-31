@@ -6,7 +6,6 @@ namespace AmadulHaque\LaravelShopify\Models;
 
 use AmadulHaque\LaravelShopify\Contracts\ShopModel;
 use AmadulHaque\LaravelShopify\Database\Factories\StoreFactory;
-use AmadulHaque\LaravelShopify\Enums\SubscriptionStatus;
 use AmadulHaque\LaravelShopify\Enums\TokenType;
 use AmadulHaque\LaravelShopify\ValueObjects\Scopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,10 +20,6 @@ use Illuminate\Support\Carbon;
  * @property TokenType $token_type
  * @property string|null $scopes
  * @property string|null $plan
- * @property string|null $subscription_id
- * @property SubscriptionStatus|null $subscription_status
- * @property Carbon|null $plan_activated_at
- * @property Carbon|null $trial_ends_at
  * @property int|null $shop_id
  * @property string|null $email
  * @property string|null $country
@@ -49,9 +44,6 @@ class Store extends Model implements ShopModel
         'shop_id' => 'integer',
         'installed_at' => 'datetime',
         'uninstalled_at' => 'datetime',
-        'subscription_status' => SubscriptionStatus::class,
-        'plan_activated_at' => 'datetime',
-        'trial_ends_at' => 'datetime',
         'metadata' => 'array',
     ];
 
@@ -90,26 +82,6 @@ class Store extends Model implements ShopModel
     public function isActive(): bool
     {
         return $this->uninstalled_at === null && ! empty($this->access_token);
-    }
-
-    public function getPlan(): ?string
-    {
-        return $this->plan;
-    }
-
-    public function getSubscriptionId(): ?string
-    {
-        return $this->subscription_id;
-    }
-
-    public function getSubscriptionStatus(): ?SubscriptionStatus
-    {
-        return $this->subscription_status;
-    }
-
-    public function isSubscribed(): bool
-    {
-        return $this->subscription_status?->isActive() ?? false;
     }
 
     protected static function newFactory(): StoreFactory

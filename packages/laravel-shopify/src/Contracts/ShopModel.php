@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AmadulHaque\LaravelShopify\Contracts;
 
+use AmadulHaque\LaravelShopify\Enums\SubscriptionStatus;
 use AmadulHaque\LaravelShopify\Enums\TokenType;
 use AmadulHaque\LaravelShopify\ValueObjects\Scopes;
 
@@ -27,4 +28,15 @@ interface ShopModel
      * A store is active when it holds a token and has not been uninstalled.
      */
     public function isActive(): bool;
+
+    public function getPlan(): ?string;
+
+    public function getSubscriptionId(): ?string;
+
+    public function getSubscriptionStatus(): ?SubscriptionStatus;
+
+    /**
+     * Whether the store currently has an active (paying or trialing) subscription.
+     */
+    public function isSubscribed(): bool;
 }

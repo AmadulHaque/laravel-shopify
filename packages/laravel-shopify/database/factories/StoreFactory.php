@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AmadulHaque\LaravelShopify\Database\Factories;
 
+use AmadulHaque\LaravelShopify\Enums\SubscriptionStatus;
 use AmadulHaque\LaravelShopify\Enums\TokenType;
 use AmadulHaque\LaravelShopify\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -42,6 +43,16 @@ class StoreFactory extends Factory
         return $this->state(fn (): array => [
             'access_token' => null,
             'uninstalled_at' => now(),
+        ]);
+    }
+
+    public function subscribed(string $plan = 'pro'): static
+    {
+        return $this->state(fn (): array => [
+            'plan' => $plan,
+            'subscription_id' => 'gid://shopify/AppSubscription/'.$this->faker->numberBetween(1, 9999),
+            'subscription_status' => SubscriptionStatus::Active,
+            'plan_activated_at' => now(),
         ]);
     }
 }

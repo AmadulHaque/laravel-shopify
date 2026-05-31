@@ -28,6 +28,8 @@ abstract class TestCase extends Orchestra
             $config->set('shopify.scopes', 'read_products,write_products');
             $config->set('shopify.app_url', 'https://app.test');
 
+            $config->set('shopify.billing.enabled', true);
+
             $config->set('database.default', 'testing');
         });
     }

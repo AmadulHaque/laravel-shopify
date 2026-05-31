@@ -4,19 +4,46 @@ declare(strict_types=1);
 
 namespace AmadulHaque\LaravelShopify\Contracts;
 
-use AmadulHaque\LaravelShopify\DTOs\RestResponse;
+use AmadulHaque\LaravelShopify\DTOs\Subscription;
+use AmadulHaque\LaravelShopify\DTOs\SubscriptionConfirmation;
+use AmadulHaque\LaravelShopify\DTOs\UsageRecord;
+use AmadulHaque\LaravelShopify\Exceptions\SubscriptionRequiredException;
 
 /**
- * Manages Shopify billing (recurring + usage charges).
- *
- * Interface-only extension point for the Phase 3 billing system; concrete
- * charge builders and the plan-enforcement middleware are added in that phase.
+ * Manages Shopify billing (recurring + usage charges) via the GraphQL Billing API.
  */
 interface BillingManager
 {
-    public function createCharge(ShopModel $store, string $plan): RestResponse;
+    /**
+     * Create a subscription for the store; returns the URL the merchant must approve.
+     */
+    public function subscribe(ShopModel $store, ?string $plan = null): SubscriptionConfirmation;
 
-    public function activate(ShopModel $store, string $chargeId): void;
+    /**
+     * The store's current active subscription as reported by Shopify, or null.
+     */
+    public function activeSubscription(ShopModel $store): ?Subscription;
 
-    public function hasActivePlan(ShopModel $store, string $plan): bool;
+    /**
+     * Whether the store has an active subscription (optionally to a specific plan).
+     * Reads persisted state — no API call.
+     */
+    public function hasActivePlan(ShopModel $store, ?string $plan = null): bool;
+
+    /**
+     * Ensure the current request's store has an active plan, or throw a
+     * {@see SubscriptionRequiredException}
+     * carrying the confirmation URL to redirect to.
+     */
+    public function requirePlan(?string $plan = null): Subscription;
+
+    /**
+     * Record a usage charge against the store's usage line item.
+     */
+    public function recordUsage(ShopModel $store, string $description, float $amount): UsageRecord;
+
+    /**
+     * Cancel the store's active subscription.
+     */
+    public function cancel(ShopModel $store): void;
 }

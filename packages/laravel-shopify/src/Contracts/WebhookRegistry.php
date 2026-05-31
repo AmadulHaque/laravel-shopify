@@ -23,4 +23,11 @@ interface WebhookRegistry
     public function handlers(): array;
 
     public function handlerFor(string $topic): ?string;
+
+    /**
+     * The registered topics, in canonical GraphQL enum form.
+     *
+     * @return list<string>
+     */
+    public function topics(): array;
 }
