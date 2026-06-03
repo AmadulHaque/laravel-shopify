@@ -9,21 +9,11 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
-        "amadulhaque/laravel-shopify": "@dev",
+        "php": "^8.4",
         "laravel/framework": "^13.8",
         "laravel/telescope": "^5.20",
         "laravel/tinker": "^3.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "packages/laravel-shopify",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/boost": "^2.2",
