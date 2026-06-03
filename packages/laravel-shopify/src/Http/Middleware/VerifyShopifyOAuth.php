@@ -19,9 +19,19 @@ final readonly class VerifyShopifyOAuth
 {
     public function __construct(private Config $config) {}
 
-    public function handle(Request $request, Closure $next): Response
+    /**
+     * @param  string|null  $mode  Pass "optional" to skip verification when no
+     *                             signature is present (e.g. a merchant-initiated
+     *                             install redirect). A present-but-invalid HMAC is
+     *                             always rejected.
+     */
+    public function handle(Request $request, Closure $next, ?string $mode = null): Response
     {
         $secret = (string) $this->config->get('shopify.api_secret');
+
+        if ($mode === 'optional' && (string) $request->query('hmac', '') === '') {
+            return $next($request);
+        }
 
         if (! Hmac::verifyOAuth($request->query(), $secret)) {
             abort(Response::HTTP_FORBIDDEN, 'Invalid Shopify OAuth HMAC signature.');

@@ -16,6 +16,7 @@ use AmadulHaque\LaravelShopify\Contracts\StoreRepository;
 use AmadulHaque\LaravelShopify\Contracts\StoreResolver;
 use AmadulHaque\LaravelShopify\Contracts\WebhookRegistry;
 use AmadulHaque\LaravelShopify\Events\StoreInstalled;
+use AmadulHaque\LaravelShopify\Http\Middleware\AuthenticateShopify;
 use AmadulHaque\LaravelShopify\Http\Middleware\EnsureActiveSubscription;
 use AmadulHaque\LaravelShopify\Http\Middleware\VerifyShopifyOAuth;
 use AmadulHaque\LaravelShopify\Http\Middleware\VerifyShopifyWebhook;
@@ -81,6 +82,7 @@ final class ShopifyServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
+        $router->aliasMiddleware('shopify.auth', AuthenticateShopify::class);
         $router->aliasMiddleware('shopify.oauth', VerifyShopifyOAuth::class);
         $router->aliasMiddleware('shopify.webhook', VerifyShopifyWebhook::class);
         $router->aliasMiddleware('shopify.billing', EnsureActiveSubscription::class);

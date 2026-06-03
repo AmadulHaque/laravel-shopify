@@ -10,7 +10,7 @@ Route::prefix((string) config('shopify.routes.prefix'))
     ->middleware((array) config('shopify.routes.middleware', ['web']))
     ->group(function (): void {
         Route::get((string) config('shopify.routes.install'), InstallController::class)
-            ->middleware('shopify.oauth')
+            ->middleware('shopify.oauth:optional')
             ->name('shopify.install');
 
         Route::get((string) config('shopify.routes.callback'), CallbackController::class)
