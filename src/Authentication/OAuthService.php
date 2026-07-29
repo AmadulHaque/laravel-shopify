@@ -2,7 +2,6 @@
 
 namespace Decoupled\Shopify\Authentication;
 
-use DateTimeImmutable;
 use Decoupled\Shopify\Contracts\HttpClient;
 use Decoupled\Shopify\Contracts\OAuthStateRepository;
 use Decoupled\Shopify\Events\AccessTokenUpdated;
@@ -23,7 +22,7 @@ class OAuthService
         private readonly StateGenerator $stateGenerator,
     ) {}
 
-    public function authorizationUrl(string|Shop $shop): string
+    public function authorizationUrl(string|Shop $shop, ?string $callbackUrl = null, ?string $token = null): string
     {
         $shop = Shop::from($shop);
         $state = $this->stateGenerator->generate();
@@ -32,14 +31,14 @@ class OAuthService
         return "https://{$shop->domain}/admin/oauth/authorize?".http_build_query([
             'client_id' => config('shopify.client_id'),
             'scope' => implode(',', config('shopify.scopes', [])),
-            'redirect_uri' => config('shopify.redirect_uri') ?: config('shopify.redirect'),
-            'state' => $state,
+            'redirect_uri' => $this->redirectUri($callbackUrl),
+            'state' => $token ? $token : $state,
         ]);
     }
 
-    public function redirect(string|Shop $shop): \Illuminate\Http\RedirectResponse
+    public function redirect(string|Shop $shop, ?string $callbackUrl = null,?string $state = null): \Illuminate\Http\RedirectResponse
     {
-        return redirect()->away($this->authorizationUrl($shop));
+        return redirect()->away($this->authorizationUrl($shop, $callbackUrl, $state));
     }
 
     public function exchange(Request $request): OAuthResult
@@ -95,5 +94,26 @@ class OAuthService
         ksort($parameters);
 
         return hash_equals(hash_hmac('sha256', http_build_query($parameters), config('shopify.client_secret')), $hmac);
+    }
+
+    private function redirectUri(?string $callbackUrl): ?string
+    {
+        if ($callbackUrl === null) {
+            return config('shopify.redirect_uri') ?: config('shopify.redirect');
+        }
+
+        // $parts = parse_url($callbackUrl);
+
+        // if (
+        //     filter_var($callbackUrl, FILTER_VALIDATE_URL) === false
+        //     || ($parts['scheme'] ?? null) !== 'https'
+        //     || empty($parts['host'])
+        //     || isset($parts['user'])
+        //     || isset($parts['pass'])
+        // ) {
+        //     throw new \InvalidArgumentException('Shopify callback URL must be a valid HTTPS URL.');
+        // }
+
+        return $callbackUrl;
     }
 }
