@@ -1,0 +1,108 @@
+<?php
+
+namespace Decoupled\Shopify\GraphQL;
+
+use Decoupled\Shopify\Contracts\HttpClient;
+use Decoupled\Shopify\Contracts\TokenRepository;
+use Decoupled\Shopify\Exceptions\GraphqlThrottled;
+use Decoupled\Shopify\Exceptions\MissingContractBinding;
+use Decoupled\Shopify\Exceptions\ShopifyHttpException;
+use Decoupled\Shopify\Http\HttpRequest;
+use Decoupled\Shopify\Support\Shop;
+
+class GraphqlClient
+{
+    private ?Shop $shop = null;
+
+    /** @var array<string, mixed> */
+    private array $variables = [];
+
+    public function __construct(private readonly TokenRepository $tokens, private readonly HttpClient $http) {}
+
+    public function shop(string|Shop $shop): self
+    {
+        $copy = clone $this;
+        $copy->shop = Shop::from($shop);
+
+        return $copy;
+    }
+
+    /** @param array<string, mixed> $variables */
+    public function variables(array $variables): self
+    {
+        $copy = clone $this;
+        $copy->variables = $variables;
+
+        return $copy;
+    }
+
+    /** @param array<string, mixed> $variables */
+    public function query(string $query, array $variables = []): GraphqlResponse
+    {
+        if ($variables !== []) {
+            return $this->variables($variables)->execute($query);
+        }
+
+        return $this->execute($query);
+    }
+
+    /** @param array<string, mixed> $variables */
+    public function mutation(string $mutation, array $variables = []): GraphqlResponse
+    {
+        if ($variables !== []) {
+            return $this->variables($variables)->execute($mutation);
+        }
+
+        return $this->execute($mutation);
+    }
+
+    private function execute(string $document): GraphqlResponse
+    {
+        if (! $this->shop) {
+            throw new \LogicException('Call shop() before executing a Shopify GraphQL operation.');
+        }
+        $token = $this->tokens->findFor($this->shop);
+        if (! $token) {
+            throw new MissingContractBinding("No Shopify token was found for {$this->shop->domain}.");
+        }
+        $response = $this->http->send(new HttpRequest(
+            'POST',
+            "https://{$this->shop->domain}/admin/api/".config('shopify.api_version').'/graphql.json',
+            ['Accept' => 'application/json', 'X-Shopify-Access-Token' => $token->value],
+            ['query' => $document, 'variables' => $this->variables],
+            config('shopify.http.timeout'),
+            config('shopify.http.retries'),
+            config('shopify.http.retry_delay_ms'),
+        ));
+        if (! $response->successful()) {
+            throw new ShopifyHttpException($response);
+        }
+        if ($this->throttled($response->json)) {
+            throw new GraphqlThrottled($this->retryAfter($response->json));
+        }
+
+        return new GraphqlResponse($response->json, $response->status);
+    }
+
+    /** @param array<string, mixed> $body */
+    private function throttled(array $body): bool
+    {
+        foreach ($body['errors'] ?? [] as $error) {
+            if (($error['extensions']['code'] ?? null) === 'THROTTLED') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** @param array<string, mixed> $body */
+    private function retryAfter(array $body): int
+    {
+        $cost = $body['extensions']['cost'] ?? [];
+        $needed = max(0, (int) ($cost['requestedQueryCost'] ?? 0) - (int) ($cost['throttleStatus']['currentlyAvailable'] ?? 0));
+        $rate = (int) ($cost['throttleStatus']['restoreRate'] ?? 0);
+
+        return $rate > 0 ? max(1, (int) ceil($needed / $rate)) : 1;
+    }
+}

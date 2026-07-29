@@ -1,0 +1,25 @@
+{
+    "name": "decoupled/laravel-shopify",
+    "description": "A contract-driven Shopify package for Laravel.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Decoupled\\Shopify\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Decoupled\\Shopify\\Providers\\ShopifyServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.3",
+        "illuminate/contracts": "^13.0",
+        "illuminate/http": "^13.0",
+        "illuminate/routing": "^13.0",
+        "illuminate/support": "^13.0"
+    }
+}
