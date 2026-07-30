@@ -79,7 +79,9 @@ class GraphqlClient
             'POST',
             "https://{$this->shop->domain}/admin/api/".config('shopify.api_version').'/graphql.json',
             ['Accept' => 'application/json', 'X-Shopify-Access-Token' => $token->value],
-            ['query' => $document, 'variables' => $this->variables],
+            // Shopify requires variables to be a JSON object. Omitting an empty
+            // variables value avoids serializing a PHP empty array as JSON [].
+            ['query' => $document, ...($this->variables === [] ? [] : ['variables' => $this->variables])],
             config('shopify.http.timeout'),
             config('shopify.http.retries'),
             config('shopify.http.retry_delay_ms'),

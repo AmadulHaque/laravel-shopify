@@ -8,9 +8,9 @@ final readonly class GraphqlResponse
     public function __construct(public array $body, public int $status) {}
 
     /** @return array<string, mixed> */
-    public function data(): array|string|null|object
+    public function data(): array
     {
-        return json_decode(json_encode($this->body['data'] ?? []));
+        return $this->body['data'] ?? [];
     }
 
     /** @return list<array<string, mixed>> */

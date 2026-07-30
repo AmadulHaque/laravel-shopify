@@ -78,7 +78,7 @@ class OAuthService
             'POST',
             "https://{$shop->domain}/admin/api/".config('shopify.api_version').'/graphql.json',
             ['Accept' => 'application/json', 'X-Shopify-Access-Token' => $token->value],
-            ['query' => 'query ValidateAccessToken { shop { myshopifyDomain } }', 'variables' => []],
+            ['query' => 'query ValidateAccessToken { shop { myshopifyDomain } }'],
             config('shopify.http.timeout'),
             config('shopify.http.retries'),
             config('shopify.http.retry_delay_ms'),
