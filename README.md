@@ -21,7 +21,7 @@ It has **no** models, migrations, database access, sessions, queues, cache store
 Install the package from Packagist:
 
 ```bash
-composer require decoupled/laravel-shopify
+composer require amadulhaque/shopify-bridge
 ```
 
 Laravel discovers `ShopifyServiceProvider` automatically. Publish the configuration only when you need to customize it:
