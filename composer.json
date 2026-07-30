@@ -1,17 +1,29 @@
 {
-    "name": "decoupled/laravel-shopify",
+    "name": "amadulhaque/shopify-bridge",
     "description": "A contract-driven Shopify package for Laravel.",
+    "keywords": [
+        "laravel",
+        "shopify",
+        "graphql",
+        "oauth",
+        "webhooks"
+    ],
+    "homepage": "https://github.com/amadulhaque/shopify-bridge",
+    "support": {
+        "issues": "https://github.com/amadulhaque/shopify-bridge/issues",
+        "source": "https://github.com/amadulhaque/shopify-bridge"
+    },
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Decoupled\\Shopify\\": "src/"
+            "Amadulhaque\\Shopify\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Decoupled\\Shopify\\Providers\\ShopifyServiceProvider"
+                "Amadulhaque\\Shopify\\Providers\\ShopifyServiceProvider"
             ]
         }
     },

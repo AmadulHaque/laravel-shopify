@@ -1,8 +1,8 @@
 <?php
 
-namespace Decoupled\Shopify\Webhooks;
+namespace Amadulhaque\Shopify\Webhooks;
 
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Support\Shop;
 
 final readonly class Webhook
 {

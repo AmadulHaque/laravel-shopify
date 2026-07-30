@@ -1,11 +1,11 @@
 <?php
 
-namespace Decoupled\Shopify;
+namespace Amadulhaque\Shopify;
 
-use Decoupled\Shopify\Authentication\OAuthService;
-use Decoupled\Shopify\Contracts\HttpClient;
-use Decoupled\Shopify\GraphQL\GraphqlClient;
-use Decoupled\Shopify\Webhooks\WebhookManager;
+use Amadulhaque\Shopify\Authentication\OAuthService;
+use Amadulhaque\Shopify\Contracts\HttpClient;
+use Amadulhaque\Shopify\GraphQL\GraphqlClient;
+use Amadulhaque\Shopify\Webhooks\WebhookManager;
 use Illuminate\Contracts\Container\Container;
 
 class ShopifyManager

@@ -1,10 +1,10 @@
 <?php
 
-namespace Decoupled\Shopify\Authentication;
+namespace Amadulhaque\Shopify\Authentication;
 
 use DateTimeInterface;
-use Decoupled\Shopify\Contracts\OAuthStateRepository;
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Contracts\OAuthStateRepository;
+use Amadulhaque\Shopify\Support\Shop;
 use Illuminate\Contracts\Cache\Factory as CacheFactory;
 
 class CacheOAuthStateRepository implements OAuthStateRepository

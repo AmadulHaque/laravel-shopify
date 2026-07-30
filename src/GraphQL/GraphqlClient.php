@@ -1,14 +1,14 @@
 <?php
 
-namespace Decoupled\Shopify\GraphQL;
+namespace Amadulhaque\Shopify\GraphQL;
 
-use Decoupled\Shopify\Contracts\HttpClient;
-use Decoupled\Shopify\Contracts\TokenRepository;
-use Decoupled\Shopify\Exceptions\GraphqlThrottled;
-use Decoupled\Shopify\Exceptions\MissingContractBinding;
-use Decoupled\Shopify\Exceptions\ShopifyHttpException;
-use Decoupled\Shopify\Http\HttpRequest;
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Contracts\HttpClient;
+use Amadulhaque\Shopify\Contracts\TokenRepository;
+use Amadulhaque\Shopify\Exceptions\GraphqlThrottled;
+use Amadulhaque\Shopify\Exceptions\MissingContractBinding;
+use Amadulhaque\Shopify\Exceptions\ShopifyHttpException;
+use Amadulhaque\Shopify\Http\HttpRequest;
+use Amadulhaque\Shopify\Support\Shop;
 
 class GraphqlClient
 {

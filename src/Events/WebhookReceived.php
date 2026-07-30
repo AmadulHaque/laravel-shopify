@@ -1,8 +1,8 @@
 <?php
 
-namespace Decoupled\Shopify\Events;
+namespace Amadulhaque\Shopify\Events;
 
-use Decoupled\Shopify\Webhooks\Webhook;
+use Amadulhaque\Shopify\Webhooks\Webhook;
 
 final readonly class WebhookReceived
 {

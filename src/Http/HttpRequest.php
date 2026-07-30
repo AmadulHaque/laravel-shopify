@@ -1,6 +1,6 @@
 <?php
 
-namespace Decoupled\Shopify\Http;
+namespace Amadulhaque\Shopify\Http;
 
 final readonly class HttpRequest
 {

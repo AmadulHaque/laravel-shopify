@@ -1,4 +1,4 @@
-# Decoupled Laravel Shopify
+# Amadulhaque Laravel Shopify
 
 A framework-style Shopify integration for Laravel. It owns Shopify protocol work—OAuth, Admin GraphQL, webhook subscriptions, and HMAC verification—while the host application owns shops, users, tokens, persistence, tenancy, and authorization.
 
@@ -72,10 +72,10 @@ use App\Shopify\MongoOAuthStateRepository;
 use App\Shopify\SubdomainShopResolver;
 use App\Shopify\TenantTokenRepository;
 use App\Shopify\TenantWebhookRepository;
-use Decoupled\Shopify\Contracts\OAuthStateRepository;
-use Decoupled\Shopify\Contracts\ShopResolver;
-use Decoupled\Shopify\Contracts\TokenRepository;
-use Decoupled\Shopify\Contracts\WebhookRepository;
+use Amadulhaque\Shopify\Contracts\OAuthStateRepository;
+use Amadulhaque\Shopify\Contracts\ShopResolver;
+use Amadulhaque\Shopify\Contracts\TokenRepository;
+use Amadulhaque\Shopify\Contracts\WebhookRepository;
 
 public function register(): void
 {
@@ -94,7 +94,7 @@ Bind `AuthorizationResolver` when your application needs to decide whether its c
 
 ```php
 use App\Shopify\CurrentUserShopAuthorization;
-use Decoupled\Shopify\Contracts\AuthorizationResolver;
+use Amadulhaque\Shopify\Contracts\AuthorizationResolver;
 
 $this->app->bind(AuthorizationResolver::class, CurrentUserShopAuthorization::class);
 ```
@@ -118,7 +118,7 @@ Example controller. `ShopifyInstallationStore` below is an **application** servi
 namespace App\Http\Controllers;
 
 use App\Shopify\ShopifyInstallationStore;
-use Decoupled\Shopify\Facades\Shopify;
+use Amadulhaque\Shopify\Facades\Shopify;
 use Illuminate\Http\Request;
 
 class ShopifyInstallController
@@ -157,7 +157,7 @@ Host app -> Application store: save(shop, token)
 GraphQL resolves the access token from `TokenRepository`, so callers only provide a shop.
 
 ```php
-use Decoupled\Shopify\Facades\Shopify;
+use Amadulhaque\Shopify\Facades\Shopify;
 
 $response = Shopify::graph()
     ->shop('demo.myshopify.com')
@@ -184,7 +184,7 @@ Shopify::graph()
 
 `GraphqlResponse` preserves Shopify `data` and `errors`. Transport failures throw `ShopifyHttpException`. A GraphQL throttle response throws `GraphqlThrottled`; queue jobs should release using `$exception->retryAfterSeconds` rather than immediately retrying.
 
-To replace Laravel's HTTP client, bind `Decoupled\Shopify\Contracts\HttpClient` to your adapter. This is where applications can add tracing, circuit breaking, distributed rate limiting, or custom retry behavior.
+To replace Laravel's HTTP client, bind `Amadulhaque\Shopify\Contracts\HttpClient` to your adapter. This is where applications can add tracing, circuit breaking, distributed rate limiting, or custom retry behavior.
 
 ## Middleware
 
@@ -212,8 +212,8 @@ Route::get('/settings', SettingsController::class)
 Provide the desired subscriptions from your application's `WebhookRepository`, then manage subscriptions through GraphQL:
 
 ```php
-use Decoupled\Shopify\Facades\Shopify;
-use Decoupled\Shopify\Webhooks\WebhookSubscription;
+use Amadulhaque\Shopify\Facades\Shopify;
+use Amadulhaque\Shopify\Webhooks\WebhookSubscription;
 
 Shopify::webhooks()->register($shop, new WebhookSubscription(
     'orders/create',
@@ -253,7 +253,7 @@ Host app -> Application logic: queue/process payload
 Listen in the host application for package events:
 
 ```php
-use Decoupled\Shopify\Events\ShopInstalled;
+use Amadulhaque\Shopify\Events\ShopInstalled;
 use Illuminate\Support\Facades\Event;
 
 Event::listen(ShopInstalled::class, function (ShopInstalled $event) {

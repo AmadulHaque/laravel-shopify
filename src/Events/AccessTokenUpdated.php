@@ -1,8 +1,8 @@
 <?php
 
-namespace Decoupled\Shopify\Events;
+namespace Amadulhaque\Shopify\Events;
 
-use Decoupled\Shopify\Authentication\OAuthResult;
+use Amadulhaque\Shopify\Authentication\OAuthResult;
 
 final readonly class AccessTokenUpdated
 {

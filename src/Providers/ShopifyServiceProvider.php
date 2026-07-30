@@ -1,17 +1,17 @@
 <?php
 
-namespace Decoupled\Shopify\Providers;
+namespace Amadulhaque\Shopify\Providers;
 
-use Decoupled\Shopify\Contracts\HttpClient;
-use Decoupled\Shopify\Contracts\OAuthStateRepository;
-use Decoupled\Shopify\Authentication\CacheOAuthStateRepository;
-use Decoupled\Shopify\Authentication\RandomStateGenerator;
-use Decoupled\Shopify\Authentication\StateGenerator;
-use Decoupled\Shopify\Http\LaravelHttpClient;
-use Decoupled\Shopify\Middleware\RequireShopAuthentication;
-use Decoupled\Shopify\Middleware\ResolveShop;
-use Decoupled\Shopify\Middleware\VerifyWebhook;
-use Decoupled\Shopify\ShopifyManager;
+use Amadulhaque\Shopify\Contracts\HttpClient;
+use Amadulhaque\Shopify\Contracts\OAuthStateRepository;
+use Amadulhaque\Shopify\Authentication\CacheOAuthStateRepository;
+use Amadulhaque\Shopify\Authentication\RandomStateGenerator;
+use Amadulhaque\Shopify\Authentication\StateGenerator;
+use Amadulhaque\Shopify\Http\LaravelHttpClient;
+use Amadulhaque\Shopify\Middleware\RequireShopAuthentication;
+use Amadulhaque\Shopify\Middleware\ResolveShop;
+use Amadulhaque\Shopify\Middleware\VerifyWebhook;
+use Amadulhaque\Shopify\ShopifyManager;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 

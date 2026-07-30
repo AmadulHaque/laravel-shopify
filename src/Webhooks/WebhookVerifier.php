@@ -1,11 +1,11 @@
 <?php
 
-namespace Decoupled\Shopify\Webhooks;
+namespace Amadulhaque\Shopify\Webhooks;
 
-use Decoupled\Shopify\Events\WebhookReceived;
-use Decoupled\Shopify\Events\WebhookVerified;
-use Decoupled\Shopify\Events\ShopUninstalled;
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Events\WebhookReceived;
+use Amadulhaque\Shopify\Events\WebhookVerified;
+use Amadulhaque\Shopify\Events\ShopUninstalled;
+use Amadulhaque\Shopify\Support\Shop;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 

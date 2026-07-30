@@ -1,6 +1,6 @@
 <?php
 
-namespace Decoupled\Shopify\Support;
+namespace Amadulhaque\Shopify\Support;
 
 use DateTimeImmutable;
 

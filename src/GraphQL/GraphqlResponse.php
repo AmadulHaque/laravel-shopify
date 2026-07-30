@@ -1,6 +1,6 @@
 <?php
 
-namespace Decoupled\Shopify\GraphQL;
+namespace Amadulhaque\Shopify\GraphQL;
 
 final readonly class GraphqlResponse
 {

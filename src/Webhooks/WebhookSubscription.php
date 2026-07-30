@@ -1,6 +1,6 @@
 <?php
 
-namespace Decoupled\Shopify\Webhooks;
+namespace Amadulhaque\Shopify\Webhooks;
 
 final readonly class WebhookSubscription
 {

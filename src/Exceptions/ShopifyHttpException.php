@@ -1,8 +1,8 @@
 <?php
 
-namespace Decoupled\Shopify\Exceptions;
+namespace Amadulhaque\Shopify\Exceptions;
 
-use Decoupled\Shopify\Http\HttpResponse;
+use Amadulhaque\Shopify\Http\HttpResponse;
 use RuntimeException;
 
 class ShopifyHttpException extends RuntimeException

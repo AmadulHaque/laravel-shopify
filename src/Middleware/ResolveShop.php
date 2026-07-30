@@ -1,9 +1,9 @@
 <?php
 
-namespace Decoupled\Shopify\Middleware;
+namespace Amadulhaque\Shopify\Middleware;
 
 use Closure;
-use Decoupled\Shopify\Contracts\ShopResolver;
+use Amadulhaque\Shopify\Contracts\ShopResolver;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 

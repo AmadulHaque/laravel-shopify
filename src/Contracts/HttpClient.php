@@ -1,9 +1,9 @@
 <?php
 
-namespace Decoupled\Shopify\Contracts;
+namespace Amadulhaque\Shopify\Contracts;
 
-use Decoupled\Shopify\Http\HttpRequest;
-use Decoupled\Shopify\Http\HttpResponse;
+use Amadulhaque\Shopify\Http\HttpRequest;
+use Amadulhaque\Shopify\Http\HttpResponse;
 
 interface HttpClient
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Decoupled\Shopify\Facades;
+namespace Amadulhaque\Shopify\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-/** @method static \Decoupled\Shopify\Authentication\OAuthService oauth() */
-/** @method static \Decoupled\Shopify\GraphQL\GraphqlClient graph() */
-/** @method static \Decoupled\Shopify\Webhooks\WebhookManager webhooks() */
-/** @method static \Decoupled\Shopify\Contracts\HttpClient client() */
+/** @method static \Amadulhaque\Shopify\Authentication\OAuthService oauth() */
+/** @method static \Amadulhaque\Shopify\GraphQL\GraphqlClient graph() */
+/** @method static \Amadulhaque\Shopify\Webhooks\WebhookManager webhooks() */
+/** @method static \Amadulhaque\Shopify\Contracts\HttpClient client() */
 class Shopify extends Facade
 {
     protected static function getFacadeAccessor(): string

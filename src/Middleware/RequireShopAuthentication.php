@@ -1,11 +1,11 @@
 <?php
 
-namespace Decoupled\Shopify\Middleware;
+namespace Amadulhaque\Shopify\Middleware;
 
 use Closure;
-use Decoupled\Shopify\Contracts\AuthorizationResolver;
-use Decoupled\Shopify\Contracts\ShopResolver;
-use Decoupled\Shopify\Contracts\TokenRepository;
+use Amadulhaque\Shopify\Contracts\AuthorizationResolver;
+use Amadulhaque\Shopify\Contracts\ShopResolver;
+use Amadulhaque\Shopify\Contracts\TokenRepository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

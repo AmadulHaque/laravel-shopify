@@ -1,6 +1,6 @@
 <?php
 
-namespace Decoupled\Shopify\Exceptions;
+namespace Amadulhaque\Shopify\Exceptions;
 
 use RuntimeException;
 

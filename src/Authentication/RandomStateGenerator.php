@@ -1,6 +1,6 @@
 <?php
 
-namespace Decoupled\Shopify\Authentication;
+namespace Amadulhaque\Shopify\Authentication;
 
 use Illuminate\Support\Str;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Decoupled\Shopify\Http;
+namespace Amadulhaque\Shopify\Http;
 
-use Decoupled\Shopify\Contracts\HttpClient;
+use Amadulhaque\Shopify\Contracts\HttpClient;
 use Illuminate\Http\Client\Factory;
 
 class LaravelHttpClient implements HttpClient

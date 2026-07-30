@@ -1,9 +1,9 @@
 <?php
 
-namespace Decoupled\Shopify\Contracts;
+namespace Amadulhaque\Shopify\Contracts;
 
-use Decoupled\Shopify\Support\Shop;
-use Decoupled\Shopify\Webhooks\WebhookSubscription;
+use Amadulhaque\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Webhooks\WebhookSubscription;
 
 interface WebhookRepository
 {

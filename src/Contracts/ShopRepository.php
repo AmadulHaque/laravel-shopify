@@ -1,8 +1,8 @@
 <?php
 
-namespace Decoupled\Shopify\Contracts;
+namespace Amadulhaque\Shopify\Contracts;
 
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Support\Shop;
 
 interface ShopRepository
 {

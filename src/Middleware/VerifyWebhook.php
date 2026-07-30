@@ -1,9 +1,9 @@
 <?php
 
-namespace Decoupled\Shopify\Middleware;
+namespace Amadulhaque\Shopify\Middleware;
 
 use Closure;
-use Decoupled\Shopify\Webhooks\WebhookVerifier;
+use Amadulhaque\Shopify\Webhooks\WebhookVerifier;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 

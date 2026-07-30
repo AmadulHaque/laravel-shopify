@@ -1,10 +1,10 @@
 <?php
 
-namespace Decoupled\Shopify\Contracts;
+namespace Amadulhaque\Shopify\Contracts;
 
 use DateTimeInterface;
-use Decoupled\Shopify\Authentication\OAuthState;
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Authentication\OAuthState;
+use Amadulhaque\Shopify\Support\Shop;
 
 interface OAuthStateRepository
 {

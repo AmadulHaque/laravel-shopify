@@ -1,15 +1,15 @@
 <?php
 
-namespace Decoupled\Shopify\Authentication;
+namespace Amadulhaque\Shopify\Authentication;
 
-use Decoupled\Shopify\Contracts\HttpClient;
-use Decoupled\Shopify\Contracts\OAuthStateRepository;
-use Decoupled\Shopify\Events\AccessTokenUpdated;
-use Decoupled\Shopify\Events\ShopInstalled;
-use Decoupled\Shopify\Exceptions\ShopifyHttpException;
-use Decoupled\Shopify\Http\HttpRequest;
-use Decoupled\Shopify\Support\AccessToken;
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Contracts\HttpClient;
+use Amadulhaque\Shopify\Contracts\OAuthStateRepository;
+use Amadulhaque\Shopify\Events\AccessTokenUpdated;
+use Amadulhaque\Shopify\Events\ShopInstalled;
+use Amadulhaque\Shopify\Exceptions\ShopifyHttpException;
+use Amadulhaque\Shopify\Http\HttpRequest;
+use Amadulhaque\Shopify\Support\AccessToken;
+use Amadulhaque\Shopify\Support\Shop;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 

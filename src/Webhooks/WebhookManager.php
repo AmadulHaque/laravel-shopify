@@ -1,11 +1,11 @@
 <?php
 
-namespace Decoupled\Shopify\Webhooks;
+namespace Amadulhaque\Shopify\Webhooks;
 
-use Decoupled\Shopify\Contracts\WebhookRepository;
-use Decoupled\Shopify\GraphQL\GraphqlClient;
-use Decoupled\Shopify\GraphQL\GraphqlResponse;
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Contracts\WebhookRepository;
+use Amadulhaque\Shopify\GraphQL\GraphqlClient;
+use Amadulhaque\Shopify\GraphQL\GraphqlResponse;
+use Amadulhaque\Shopify\Support\Shop;
 
 class WebhookManager
 {

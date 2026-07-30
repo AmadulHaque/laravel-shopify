@@ -1,9 +1,9 @@
 <?php
 
-namespace Decoupled\Shopify\Contracts;
+namespace Amadulhaque\Shopify\Contracts;
 
-use Decoupled\Shopify\Support\AccessToken;
-use Decoupled\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Support\AccessToken;
+use Amadulhaque\Shopify\Support\Shop;
 
 interface TokenRepository
 {

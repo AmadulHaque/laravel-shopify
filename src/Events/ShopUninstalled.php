@@ -1,9 +1,9 @@
 <?php
 
-namespace Decoupled\Shopify\Events;
+namespace Amadulhaque\Shopify\Events;
 
-use Decoupled\Shopify\Support\Shop;
-use Decoupled\Shopify\Webhooks\Webhook;
+use Amadulhaque\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Webhooks\Webhook;
 
 final readonly class ShopUninstalled
 {

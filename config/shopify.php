@@ -1,12 +1,12 @@
 <?php
 
-use Decoupled\Shopify\Contracts\AuthorizationResolver;
-use Decoupled\Shopify\Contracts\OAuthStateRepository;
-use Decoupled\Shopify\Contracts\ShopRepository;
-use Decoupled\Shopify\Contracts\ShopResolver;
-use Decoupled\Shopify\Contracts\TokenRepository;
-use Decoupled\Shopify\Contracts\WebhookRepository;
-use Decoupled\Shopify\Http\LaravelHttpClient;
+use Amadulhaque\Shopify\Contracts\AuthorizationResolver;
+use Amadulhaque\Shopify\Contracts\OAuthStateRepository;
+use Amadulhaque\Shopify\Contracts\ShopRepository;
+use Amadulhaque\Shopify\Contracts\ShopResolver;
+use Amadulhaque\Shopify\Contracts\TokenRepository;
+use Amadulhaque\Shopify\Contracts\WebhookRepository;
+use Amadulhaque\Shopify\Http\LaravelHttpClient;
 
 return [
     'client_id' => env('SHOPIFY_CLIENT_ID'),
