@@ -7,10 +7,12 @@ use Amadulhaque\Shopify\GraphQL\GraphqlClient;
 use Amadulhaque\Shopify\GraphQL\GraphqlResponse;
 use Amadulhaque\Shopify\Support\AccessToken;
 use Amadulhaque\Shopify\Support\Shop;
+use Amadulhaque\Shopify\Exceptions\MissingContractBinding;
+use Illuminate\Contracts\Container\Container;
 
 class WebhookManager
 {
-    public function __construct(private readonly GraphqlClient $graph, private readonly WebhookRepository $definitions) {}
+    public function __construct(private readonly GraphqlClient $graph, private readonly Container $container) {}
 
     public function register(string|Shop $shop, WebhookSubscription $webhook, string|AccessToken|null $accessToken = null): GraphqlResponse
     {
@@ -49,7 +51,7 @@ class WebhookManager
         foreach ($remote as $node) {
             $existing[$node['topic'].'|'.$node['callbackUrl']] = $node['id'];
         }
-        foreach ($this->definitions->desiredFor($shop) as $webhook) {
+        foreach ($this->definitions()->desiredFor($shop) as $webhook) {
             $key = $this->topic($webhook->topic).'|'.$webhook->callbackUrl;
             if (! isset($existing[$key])) {
                 $responses[] = $this->register($shop, $webhook, $accessToken);
@@ -99,5 +101,14 @@ class WebhookManager
     private function topic(string $topic): string
     {
         return strtoupper(str_replace('/', '_', $topic));
+    }
+
+    private function definitions(): WebhookRepository
+    {
+        if (! $this->container->bound(WebhookRepository::class)) {
+            throw new MissingContractBinding('Bind '.WebhookRepository::class.' before calling sync().');
+        }
+
+        return $this->container->make(WebhookRepository::class);
     }
 }
