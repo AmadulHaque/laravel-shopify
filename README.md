@@ -40,15 +40,30 @@ Set these values in the host application's `.env`:
 SHOPIFY_CLIENT_ID=
 SHOPIFY_CLIENT_SECRET=
 SHOPIFY_REDIRECT_URI=https://app.example.com/shopify/callback
+# Redis, file, database, etc. Omit to use Laravel CACHE_STORE.
+SHOPIFY_STATE_CACHE_STORE=redis
 SHOPIFY_API_VERSION=2026-07
 SHOPIFY_SCOPES=read_products,write_products
 ```
 
 Add the same complete callback URL to your Shopify app's allowed redirection URLs. The published `config/shopify.php` configures API version, scopes, retries, timeout, and a replaceable HTTP client. It does not configure storage.
 
+### OAuth state data
+
+Pass optional state data as third `redirect()` or `authorizationUrl()` argument. Package sends only an opaque random state token to Shopify, stores your data through `OAuthStateRepository`, then returns it as `$result->state` after valid callback. Do not JSON-encode or URL-encode state yourself.
+
+```php
+return Shopify::oauth()->redirect($shop, route('shopify.callback'), [
+    'id' => 1234,
+]);
+
+// After exchange:
+$result->state['id'];
+```
+
 ## Bind application contracts
 
-Before using OAuth, GraphQL, or middleware, bind your own implementations. These can use Eloquent, MongoDB, Redis, a third-party service, encrypted files, or any other storage mechanism.
+OAuth state uses package cache repository by default. Set `SHOPIFY_STATE_CACHE_STORE=redis` or `file` (or omit it to use Laravel `CACHE_STORE`). Bind your own `OAuthStateRepository` only when custom state storage is needed. Bind your own implementations for tokens, shop resolution, webhook definitions, and application authorization.
 
 ```php
 // app/Providers/AppServiceProvider.php
@@ -71,7 +86,7 @@ public function register(): void
 }
 ```
 
-`OAuthStateRepository::pull()` must consume the state once. `TokenRepository::findFor(Shop $shop)` must return `AccessToken|null`. The package never calls a `save`, `create`, or `update` method on a repository.
+`OAuthStateRepository::put()` receives optional state data. `pull()` must return it and consume state once. `TokenRepository::findFor(Shop $shop)` must return `AccessToken|null`. The package never calls a `save`, `create`, or `update` method on a repository.
 
 ### Optional application authorization
 

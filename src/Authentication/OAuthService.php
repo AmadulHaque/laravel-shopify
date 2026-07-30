@@ -22,21 +22,23 @@ class OAuthService
         private readonly StateGenerator $stateGenerator,
     ) {}
 
-    public function authorizationUrl(string|Shop $shop, ?string $callbackUrl = null, ?string $token = null): string
+    /** @param array<string, mixed> $state */
+    public function authorizationUrl(string|Shop $shop, ?string $callbackUrl = null, array $state = []): string
     {
         $shop = Shop::from($shop);
-        $state = $this->stateGenerator->generate();
-        $this->states->put($state, $shop, now()->addMinutes(10));
+        $stateToken = $this->stateGenerator->generate();
+        $this->states->put($stateToken, $shop, now()->addMinutes(10), $state);
 
         return "https://{$shop->domain}/admin/oauth/authorize?".http_build_query([
             'client_id' => config('shopify.client_id'),
             'scope' => implode(',', config('shopify.scopes', [])),
             'redirect_uri' => $this->redirectUri($callbackUrl),
-            'state' => $token ? $token : $state,
+            'state' => $stateToken,
         ]);
     }
 
-    public function redirect(string|Shop $shop, ?string $callbackUrl = null,?string $state = null): \Illuminate\Http\RedirectResponse
+    /** @param array<string, mixed> $state */
+    public function redirect(string|Shop $shop, ?string $callbackUrl = null, array $state = []): \Illuminate\Http\RedirectResponse
     {
         return redirect()->away($this->authorizationUrl($shop, $callbackUrl, $state));
     }
@@ -51,7 +53,12 @@ class OAuthService
         ]);
 
         $shop = Shop::from($request->string('shop')->toString());
-        if (! $this->hasValidHmac($request) || $this->states->pull($request->string('state')->toString())?->domain !== $shop->domain) {
+        if (! $this->hasValidHmac($request)) {
+            abort(403, 'Invalid Shopify OAuth callback.');
+        }
+
+        $state = $this->states->pull($request->string('state')->toString());
+        if ($state?->shop->domain !== $shop->domain) {
             abort(403, 'Invalid Shopify OAuth callback.');
         }
 
@@ -79,7 +86,7 @@ class OAuthService
             isset($response->json['expires_in']) ? now()->addSeconds((int) $response->json['expires_in'])->toImmutable() : null,
             $response->json['refresh_token'] ?? null,
         );
-        $result = new OAuthResult($shop, $token);
+        $result = new OAuthResult($shop, $token, $state->data);
         $this->events->dispatch(new ShopInstalled($result));
         $this->events->dispatch(new AccessTokenUpdated($result));
 
@@ -99,20 +106,19 @@ class OAuthService
     private function redirectUri(?string $callbackUrl): ?string
     {
         if ($callbackUrl === null) {
-            return config('shopify.redirect_uri') ?: config('shopify.redirect');
+            return config('shopify.redirect_uri');
         }
 
-        // $parts = parse_url($callbackUrl);
-
-        // if (
-        //     filter_var($callbackUrl, FILTER_VALIDATE_URL) === false
-        //     || ($parts['scheme'] ?? null) !== 'https'
-        //     || empty($parts['host'])
-        //     || isset($parts['user'])
-        //     || isset($parts['pass'])
-        // ) {
-        //     throw new \InvalidArgumentException('Shopify callback URL must be a valid HTTPS URL.');
-        // }
+        $parts = parse_url($callbackUrl);
+        if (
+            filter_var($callbackUrl, FILTER_VALIDATE_URL) === false
+            || ($parts['scheme'] ?? null) !== 'https'
+            || empty($parts['host'])
+            || isset($parts['user'])
+            || isset($parts['pass'])
+        ) {
+            throw new \InvalidArgumentException('Shopify callback URL must be a valid HTTPS URL.');
+        }
 
         return $callbackUrl;
     }

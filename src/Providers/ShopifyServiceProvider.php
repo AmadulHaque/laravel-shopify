@@ -3,6 +3,8 @@
 namespace Decoupled\Shopify\Providers;
 
 use Decoupled\Shopify\Contracts\HttpClient;
+use Decoupled\Shopify\Contracts\OAuthStateRepository;
+use Decoupled\Shopify\Authentication\CacheOAuthStateRepository;
 use Decoupled\Shopify\Authentication\RandomStateGenerator;
 use Decoupled\Shopify\Authentication\StateGenerator;
 use Decoupled\Shopify\Http\LaravelHttpClient;
@@ -19,6 +21,7 @@ class ShopifyServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../../config/shopify.php', 'shopify');
         $this->app->singleton(StateGenerator::class, RandomStateGenerator::class);
+        $this->app->bindIf(OAuthStateRepository::class, CacheOAuthStateRepository::class);
         $this->app->singleton(HttpClient::class, fn ($app) => $app->make(config('shopify.http_client', LaravelHttpClient::class)));
         $this->app->singleton('shopify', ShopifyManager::class);
     }
