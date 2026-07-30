@@ -10,6 +10,7 @@ use Amadulhaque\Shopify\Exceptions\ShopifyHttpException;
 use Amadulhaque\Shopify\Http\HttpRequest;
 use Amadulhaque\Shopify\Support\AccessToken;
 use Amadulhaque\Shopify\Support\Shop;
+use Illuminate\Contracts\Container\Container;
 
 class GraphqlClient
 {
@@ -20,7 +21,7 @@ class GraphqlClient
     /** @var array<string, mixed> */
     private array $variables = [];
 
-    public function __construct(private readonly TokenRepository $tokens, private readonly HttpClient $http) {}
+    public function __construct(private readonly Container $container, private readonly HttpClient $http) {}
 
     public function shop(string|Shop $shop, string|AccessToken|null $accessToken = null): self
     {
@@ -70,7 +71,7 @@ class GraphqlClient
         if (! $this->shop) {
             throw new \LogicException('Call shop() before executing a Shopify GraphQL operation.');
         }
-        $token = $this->accessToken ?? $this->tokens->findFor($this->shop);
+        $token = $this->accessToken ?? $this->tokenFor($this->shop);
         if (! $token) {
             throw new MissingContractBinding("No Shopify token was found for {$this->shop->domain}.");
         }
@@ -113,5 +114,14 @@ class GraphqlClient
         $rate = (int) ($cost['throttleStatus']['restoreRate'] ?? 0);
 
         return $rate > 0 ? max(1, (int) ceil($needed / $rate)) : 1;
+    }
+
+    private function tokenFor(Shop $shop): ?AccessToken
+    {
+        if (! $this->container->bound(TokenRepository::class)) {
+            throw new MissingContractBinding('Bind '.TokenRepository::class.' or provide an access token with shop($shop, $accessToken).');
+        }
+
+        return $this->container->make(TokenRepository::class)->findFor($shop);
     }
 }
