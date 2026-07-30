@@ -38,9 +38,9 @@ class OAuthService
     }
 
     /** @param array<string, mixed> $state */
-    public function redirect(string|Shop $shop, ?string $callbackUrl = null, array $state = []): \Illuminate\Http\RedirectResponse
+    public function redirect(string|Shop $shop, ?string $callbackUrl = null, array $state = []): string
     {
-        return redirect()->away($this->authorizationUrl($shop, $callbackUrl, $state));
+        return $this->authorizationUrl($shop, $callbackUrl, $state);
     }
 
     public function exchange(Request $request): OAuthResult
