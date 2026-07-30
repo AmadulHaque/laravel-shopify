@@ -8,21 +8,30 @@ use Amadulhaque\Shopify\Exceptions\GraphqlThrottled;
 use Amadulhaque\Shopify\Exceptions\MissingContractBinding;
 use Amadulhaque\Shopify\Exceptions\ShopifyHttpException;
 use Amadulhaque\Shopify\Http\HttpRequest;
+use Amadulhaque\Shopify\Support\AccessToken;
 use Amadulhaque\Shopify\Support\Shop;
 
 class GraphqlClient
 {
     private ?Shop $shop = null;
 
+    private ?AccessToken $accessToken = null;
+
     /** @var array<string, mixed> */
     private array $variables = [];
 
     public function __construct(private readonly TokenRepository $tokens, private readonly HttpClient $http) {}
 
-    public function shop(string|Shop $shop): self
+    public function shop(string|Shop $shop, string|AccessToken|null $accessToken = null): self
     {
         $copy = clone $this;
         $copy->shop = Shop::from($shop);
+        $copy->accessToken = match (true) {
+            $accessToken instanceof AccessToken => $accessToken,
+            is_string($accessToken) && trim($accessToken) !== '' => new AccessToken(trim($accessToken)),
+            $accessToken === null => null,
+            default => throw new \InvalidArgumentException('Shopify access token must not be empty.'),
+        };
 
         return $copy;
     }
@@ -61,7 +70,7 @@ class GraphqlClient
         if (! $this->shop) {
             throw new \LogicException('Call shop() before executing a Shopify GraphQL operation.');
         }
-        $token = $this->tokens->findFor($this->shop);
+        $token = $this->accessToken ?? $this->tokens->findFor($this->shop);
         if (! $token) {
             throw new MissingContractBinding("No Shopify token was found for {$this->shop->domain}.");
         }

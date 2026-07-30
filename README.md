@@ -152,6 +152,22 @@ Host app -> Application store: save(shop, token)
 
 `exchange()` returns an immutable `OAuthResult` with `Shop` and `AccessToken`; it never persists either value.
 
+### Providing and validating an existing access token
+
+For an already-installed shop, pass its domain and token directly. The token is used
+only for that call chain and is never persisted by this package.
+
+```php
+$oauth = Shopify::oauth('amad123s.myshopify.com', 'shpat_existing_token');
+
+if (! $oauth->accessTokenIsValid()) {
+    // Reinstall or ask the merchant to reconnect the app.
+}
+
+// The configured shop makes the domain optional here.
+$url = Shopify::oauth('amad123s.myshopify.com')->authorizationUrl();
+```
+
 ## GraphQL usage
 
 GraphQL resolves the access token from `TokenRepository`, so callers only provide a shop.
@@ -180,6 +196,14 @@ Shopify::graph()
     ->mutation('mutation ($input: ProductInput!) { productCreate(input: $input) { product { id } userErrors { message } } }', [
         'input' => ['title' => 'New product'],
     ]);
+```
+
+When you have a token at call time, pass it as the second `graph()` argument instead
+of implementing `TokenRepository`:
+
+```php
+Shopify::graph('amad123s.myshopify.com', 'shpat_existing_token')
+    ->query('query { shop { name } }');
 ```
 
 `GraphqlResponse` preserves Shopify `data` and `errors`. Transport failures throw `ShopifyHttpException`. A GraphQL throttle response throws `GraphqlThrottled`; queue jobs should release using `$exception->retryAfterSeconds` rather than immediately retrying.
@@ -223,6 +247,25 @@ Shopify::webhooks()->register($shop, new WebhookSubscription(
 Shopify::webhooks()->delete($shop, $subscriptionId);
 Shopify::webhooks()->sync($shop);       // Registers missing desired subscriptions.
 Shopify::webhooks()->sync($shop, true); // Also removes stale remote subscriptions.
+```
+
+All application-webhook operations can receive a direct access token as their final
+argument. `all()` retrieves every page; `sync()` uses it too, so it detects stale
+subscriptions beyond Shopify's first 250 results.
+
+```php
+$shop = 'amad123s.myshopify.com';
+$token = 'shpat_existing_token';
+
+Shopify::webhooks()->register($shop, new WebhookSubscription(
+    'orders/create',
+    'https://app.example.com/webhooks/orders',
+), $token);
+
+$firstPage = Shopify::webhooks()->list($shop, null, $token);
+$subscriptions = Shopify::webhooks()->all($shop, $token);
+Shopify::webhooks()->sync($shop, true, $token);
+Shopify::webhooks()->delete($shop, $subscriptionId, $token);
 ```
 
 `sync(..., true)` is explicitly opt-in because deleting a remote subscription can affect another component that manages the same store.
@@ -288,9 +331,13 @@ php artisan test
 ```php
 Shopify::oauth()->redirect($shop);
 Shopify::oauth()->exchange($request);
+Shopify::oauth($shop, $accessToken)->accessTokenIsValid();
 Shopify::graph()->shop($shop)->query($query, $variables);
+Shopify::graph($shop, $accessToken)->query($query, $variables);
 Shopify::graph()->shop($shop)->mutation($mutation, $variables);
 Shopify::webhooks()->register($shop, $subscription);
+Shopify::webhooks()->list($shop);
+Shopify::webhooks()->all($shop);
 Shopify::webhooks()->delete($shop, $subscriptionId);
 Shopify::webhooks()->sync($shop);
 Shopify::client();
